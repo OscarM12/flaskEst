@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Estudiantes</title>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Gestión de Estudiantes</h1>
+
+        <!-- Formulario para crear o modificar estudiantes -->
+        <form id="student-form">
+            <label for="id">ID del Estudiante:</label>
+            <input type="text" id="id" name="id" required disabled> <!-- ID deshabilitado -->
+
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+
+            <label for="edad">Edad:</label>
+            <input type="number" id="edad" name="edad" required>
+
+            <label for="curso">Curso:</label>
+            <input type="text" id="curso" name="curso" required>
+
+            <button type="submit">Guardar</button>
+            <button type="button" id="accept-btn" style="display:none;">Aceptar Cambios</button> <!-- Botón para aceptar cambios -->
+        </form>
+
+        <!-- Tabla para mostrar los resultados -->
+        <h2>Estudiantes Registrados</h2>
+
+        <!-- Contenedor para la tabla con scroll -->
+        <div id="results-table-container">
+            <table id="results-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Edad</th>
+                        <th>Curso</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for estudiante in estudiantes %}
+                    <tr id="row-{{ estudiante.id }}">
+                        <td>{{ estudiante.id }}</td>
+                        <td>{{ estudiante.nombre }}</td>
+                        <td>{{ estudiante.edad }}</td>
+                        <td>{{ estudiante.curso }}</td>
+                        <td class="actions">
+                            <button class="modify-btn" onclick="modificarEstudiante('{{ estudiante.id }}', '{{ estudiante.nombre }}', '{{ estudiante.edad }}', '{{ estudiante.curso }}')">Modificar</button>
+                            <button class="delete-btn" onclick="eliminarEstudiante('{{ estudiante.id }}', this.closest('tr'))">Eliminar</button>
+                            <button class="view-xml-btn" onclick="verXML('{{ estudiante.id }}')">Ver XML</button>
+                            <button class="download-xml-btn" onclick="descargarXML('{{ estudiante.id }}')">Descargar XML</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal para mostrar el contenido XML -->
+        <div id="xml-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="cerrarXML()">&times;</span>
+                <h2>Contenido del XML</h2>
+                <pre id="xml-content"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="../static/script.js"></script>
+</body>
+</html>
