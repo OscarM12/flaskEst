@@ -8,12 +8,15 @@ import io  # Para manejar descargas de archivos
 app = Flask(__name__)
  
 # Configuración de la base de datos
+import os
+
 db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'database': 'gestion_estudiantes',
-    'password': 'Morenoram12'
+    'host': os.getenv('DB_HOST', 'localhost'),
+    'user': os.getenv('DB_USER', 'root'),
+    'database': os.getenv('DB_NAME', 'gestion_estudiantes'),
+    'password': os.getenv('DB_PASSWORD', 'Morenoram12')
 }
+
  
 def get_db_connection():
     return mysql.connector.connect(**db_config)
