@@ -4,9 +4,13 @@ import xml.etree.ElementTree as ET
 from xml.dom.minidom import parseString
 from xml.sax.saxutils import escape  # Para manejar caracteres especiales
 import io  # Para manejar descargas de archivos
- 
+from dotenv import load_dotenv
+import os
 app = Flask(__name__)
- 
+load_dotenv()
+
+db_host = os.getenv('DB_HOST')
+db_user = os.getenv('DB_USER')
 # Configuración de la base de datos
 import os
 
