@@ -1,4 +1,4 @@
-// Función para validar los datos del formulario
+//función para validar los datos del formulario
 function validarFormulario() {
     const nombre = document.getElementById('nombre').value.trim();
     const edad = document.getElementById('edad').value.trim();
@@ -71,8 +71,7 @@ function descargarXML(estudianteId) {
     window.location.href = `/descargar_xml/${estudianteId}`;
 }
  
-// Función para manejar el envío del formulario
-document.getElementById('student-form').addEventListener('submit', function (event) {
+document.getElementById('accept-btn').addEventListener('click', function (event) {
     event.preventDefault();
  
     if (!validarFormulario()) return;
@@ -83,7 +82,7 @@ document.getElementById('student-form').addEventListener('submit', function (eve
     const curso = document.getElementById('curso').value;
  
     const studentData = { nombre, edad, curso };
- 
+console.log(id,nombre,edad,curso)
     // Determinar si es un nuevo registro o una actualización
     const url = id ? `/actualizar/${id}` : '/guardar';
     const method = id ? 'PUT' : 'POST';
@@ -120,4 +119,55 @@ document.getElementById('student-form').addEventListener('submit', function (eve
         })
         .catch(error => console.error('Error:', error));
 });
+ 
+// Función para manejar el envío del formulario
+document.getElementById('student-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+ 
+    if (!validarFormulario()) return;
+ 
+    const id = document.getElementById('hidden-id').value; // Obtener el ID del campo oculto
+    const nombre = document.getElementById('nombre').value;
+    const edad = document.getElementById('edad').value;
+    const curso = document.getElementById('curso').value;
+ 
+    const studentData = { nombre, edad, curso };
+console.log(id,nombre,edad,curso)
+    // Determinar si es un nuevo registro o una actualización
+    const url = id ? `/actualizar/${id}` : '/guardar';
+    const method = id ? 'PUT' : 'POST';
+ 
+    fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(studentData)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+ 
+                if (id) {
+                    // Actualizar la fila en la tabla
+                    const updatedStudent = data.data; // Datos del estudiante actualizado
+                    const row = document.getElementById(`row-${id}`);
+                    row.children[1].textContent = updatedStudent.nombre;
+                    row.children[2].textContent = updatedStudent.edad;
+                    row.children[3].textContent = updatedStudent.curso;
+                } else {
+                    // Agregar nueva fila si es un nuevo registro
+                    actualizarTabla(studentData);
+                }
+ 
+                // Resetear formulario
+                document.getElementById('student-form').reset();
+                document.getElementById('accept-btn').style.display = 'none';
+                document.getElementById('save-btn').style.display = 'block';
+            } else {
+                alert(data.error || 'Error al guardar el estudiante.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
+ 
  
